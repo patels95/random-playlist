@@ -7,8 +7,11 @@ import com.spatel95.randomplaylist.config.Keys
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import org.jetbrains.anko.toast
 
-class LoginActivity : Activity() {
+class LoginActivity : Activity(), AnkoLogger {
 
     companion object {
         const val REQUEST_CODE = 1
@@ -32,6 +35,19 @@ class LoginActivity : Activity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        if (requestCode == REQUEST_CODE) {
+            val response = AuthenticationClient.getResponse(resultCode, data)
+            when (response.type) {
+                AuthenticationResponse.Type.TOKEN -> {
+                    toast("login successful")
+                    info("token: " + response.accessToken)
 
+                }
+                AuthenticationResponse.Type.ERROR -> {
+                    toast("login error")
+                }
+                else -> info("login cancelled")
+            }
+        }
     }
 }
