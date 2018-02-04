@@ -1,17 +1,21 @@
 package com.spatel95.randomplaylist
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.debug
+import org.jetbrains.anko.intentFor
 
-class MainActivity : Activity() {
+
+class MainActivity : Activity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        debug("main activity")
+
         // go to login activity
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        startActivity(intentFor<LoginActivity>())
     }
 }

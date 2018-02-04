@@ -7,13 +7,19 @@
     android:layout_height="match_parent"
     tools:context="com.spatel95.randomplaylist.LoginActivity">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login Activity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/loginButton"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/login_button_text"
+        android:background="@color/spotifyGreen"
+        android:textColor="@android:color/white"
+        android:padding="15dp"/>
+
+
 
 </android.support.constraint.ConstraintLayout>

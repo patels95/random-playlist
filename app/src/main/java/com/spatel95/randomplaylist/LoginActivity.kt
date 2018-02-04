@@ -7,9 +7,8 @@ import com.spatel95.randomplaylist.config.Keys
 import com.spotify.sdk.android.authentication.AuthenticationClient
 import com.spotify.sdk.android.authentication.AuthenticationRequest
 import com.spotify.sdk.android.authentication.AuthenticationResponse
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.toast
+import kotlinx.android.synthetic.main.activity_login.*
+import org.jetbrains.anko.*
 
 class LoginActivity : Activity(), AnkoLogger {
 
@@ -22,7 +21,12 @@ class LoginActivity : Activity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        login()
+        debug("LOGIN ACTIVITY")
+//        debug("login activity")
+
+        loginButton.setOnClickListener {
+            login()
+        }
     }
 
     private fun login() {
@@ -32,22 +36,32 @@ class LoginActivity : Activity(), AnkoLogger {
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request)
     }
 
+    private fun startMainActivity() {
+        toast("START MAIN ACTIVITY")
+        debug("START MAIN ACTIVITY")
+        startActivity(intentFor<MainActivity>())
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE) {
             val response = AuthenticationClient.getResponse(resultCode, data)
+            debug("RESPONSE")
             when (response.type) {
                 AuthenticationResponse.Type.TOKEN -> {
+                    debug("token: " + response.accessToken)
+                    startMainActivity()
+                    startActivity(intentFor<MainActivity>())
+                    debug("AFTER START MAIN ACTIVITY")
                     toast("login successful")
-                    info("token: " + response.accessToken)
-
                 }
                 AuthenticationResponse.Type.ERROR -> {
                     toast("login error")
                 }
-                else -> info("login cancelled")
+                else -> warn("login cancelled")
             }
+            debug("AFTER WHEN")
         }
     }
 }

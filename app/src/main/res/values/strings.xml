@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Random Playlist</string>
+    <string name="login_button_text">LOGIN WITH SPOTIFY</string>
 </resources>
