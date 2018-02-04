@@ -3,7 +3,7 @@ package com.spatel95.randomplaylist
 import android.app.Activity
 import android.os.Bundle
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.debug
+import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 
 
@@ -13,7 +13,7 @@ class MainActivity : Activity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        debug("main activity")
+        info("main activity")
 
         // go to login activity
         startActivity(intentFor<LoginActivity>())

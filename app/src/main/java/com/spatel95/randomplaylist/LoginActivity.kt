@@ -21,9 +21,6 @@ class LoginActivity : Activity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        debug("LOGIN ACTIVITY")
-//        debug("login activity")
-
         loginButton.setOnClickListener {
             login()
         }
@@ -36,32 +33,21 @@ class LoginActivity : Activity(), AnkoLogger {
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request)
     }
 
-    private fun startMainActivity() {
-        toast("START MAIN ACTIVITY")
-        debug("START MAIN ACTIVITY")
-        startActivity(intentFor<MainActivity>())
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == REQUEST_CODE) {
             val response = AuthenticationClient.getResponse(resultCode, data)
-            debug("RESPONSE")
             when (response.type) {
                 AuthenticationResponse.Type.TOKEN -> {
-                    debug("token: " + response.accessToken)
-                    startMainActivity()
-                    startActivity(intentFor<MainActivity>())
-                    debug("AFTER START MAIN ACTIVITY")
-                    toast("login successful")
+                    info("token: " + response.accessToken)
+                    finish() // back to main activity
                 }
                 AuthenticationResponse.Type.ERROR -> {
                     toast("login error")
                 }
                 else -> warn("login cancelled")
             }
-            debug("AFTER WHEN")
         }
     }
 }
