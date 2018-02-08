@@ -15,6 +15,7 @@ class LoginActivity : Activity(), AnkoLogger {
     companion object {
         const val REQUEST_CODE = 1
         const val REDIRECT_URI = "random-playlist://callback"
+        const val ACCESS_TOKEN = "ACCESS_TOKEN"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,9 @@ class LoginActivity : Activity(), AnkoLogger {
             val response = AuthenticationClient.getResponse(resultCode, data)
             when (response.type) {
                 AuthenticationResponse.Type.TOKEN -> {
-                    info("token: " + response.accessToken)
+                    val resultIntent = Intent()
+                    resultIntent.putExtra(ACCESS_TOKEN, response.accessToken)
+                    setResult(Activity.RESULT_OK, resultIntent)
                     finish() // back to main activity
                 }
                 AuthenticationResponse.Type.ERROR -> {
