@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
+import com.github.kittinunf.result.getAs
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import org.jetbrains.anko.info
@@ -24,12 +25,7 @@ class MainActivity : Activity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        info("main activity")
-        // TODO: get access token from LoginActivity and set Beare
-2
         // go to login activity
-        startActivity(intentFor<LoginActivity>())
-
         startActivityForResult(intentFor<LoginActivity>(), LOGIN_REQUEST_CODE)
     }
 
@@ -39,10 +35,14 @@ class MainActivity : Activity(), AnkoLogger {
         when (requestCode) {
             LOGIN_REQUEST_CODE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    // TODO: Fix this
-                    accessToken = data.getStringExtra(LoginActivity.ACCESS_TOKEN)
-                    info("token: " + accessToken)
-                    FuelManager.instance.baseHeaders = mapOf("Bearer" to accessToken)
+                    if (data != null) {
+                        accessToken = data.getStringExtra(LoginActivity.ACCESS_TOKEN)
+                        info("token: " + accessToken)
+                        FuelManager.instance.baseHeaders = mapOf("Authorization" to "Bearer " + accessToken)
+                        getSavedSongs()
+                    } else {
+                        error("Error setting access token")
+                    }
                 }
             }
         }
@@ -51,12 +51,14 @@ class MainActivity : Activity(), AnkoLogger {
     // get user's saved songs
     private fun getSavedSongs() {
         "https://api.spotify.com/v1/me/tracks".httpGet().responseString { request, response, result ->
+            info(request.toString())
             when (result) {
                 is Result.Failure -> {
-                    error("error: " + result.get())
+                    error("error: " + result.toString())
                 }
                 is Result.Success -> {
                     info(result.get())
+                    // TODO: Use result
                 }
             }
         }

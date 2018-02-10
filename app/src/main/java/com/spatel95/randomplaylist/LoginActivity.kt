@@ -44,7 +44,7 @@ class LoginActivity : Activity(), AnkoLogger {
                     val resultIntent = Intent()
                     resultIntent.putExtra(ACCESS_TOKEN, response.accessToken)
                     setResult(Activity.RESULT_OK, resultIntent)
-                    finish() // back to main activity
+                    finish()
                 }
                 AuthenticationResponse.Type.ERROR -> {
                     toast("login error")
