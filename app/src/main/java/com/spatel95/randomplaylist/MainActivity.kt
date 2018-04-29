@@ -6,6 +6,8 @@ import android.os.Bundle
 import com.github.kittinunf.fuel.core.FuelManager
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
+import com.google.gson.Gson
+import com.spatel95.randomplaylist.model.Track
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.error
 import org.jetbrains.anko.info
@@ -20,7 +22,8 @@ class MainActivity : Activity(), AnkoLogger {
         const val LOGIN_REQUEST_CODE = 1
     }
 
-    var accessToken: String = ""
+    private var accessToken: String = ""
+    private val tracks = mutableListOf<Track>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class MainActivity : Activity(), AnkoLogger {
                         accessToken = data.getStringExtra(LoginActivity.ACCESS_TOKEN)
                         info("token: " + accessToken)
                         FuelManager.instance.baseHeaders = mapOf("Authorization" to "Bearer " + accessToken)
+                        // TODO: Use offset to get more songs and add to the tracks list
                         getSavedSongs()
                     } else {
                         error("Error setting access token")
@@ -59,11 +63,17 @@ class MainActivity : Activity(), AnkoLogger {
                 }
                 is Result.Success -> {
                     val json = JSONObject(result.get())
+                    // TODO: Get offset from json
                     val jsonTracks = json.getJSONArray("items")
                     (0..(jsonTracks.length() - 1))
                             .map { jsonTracks.getJSONObject(it) }
-                            .forEach { info(it.getString("added_at")) }
-                    // TODO: Use gson to make array of Tracks
+                            .forEach {
+                                val jsonTrack = it.getString("track")
+                                val gson = Gson()
+                                val track = gson.fromJson(jsonTrack, Track::class.java)
+                                tracks.add(track)
+                            }
+                    info("tracks length: " + tracks.size)
                 }
             }
         }
